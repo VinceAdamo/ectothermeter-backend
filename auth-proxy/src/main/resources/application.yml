@@ -1,0 +1,43 @@
+application:
+  jwt:
+    secret: ${JWT_SECRET}
+api:
+  user:
+    url: ${USER_SERVICE}
+  device: 
+    url: ${DEVICE_SERVICE}
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
+      routes:
+        - id: data
+          uri: http://localhost:8090
+          predicates:
+            - Path=/humidity/{deviceId}/latest,/temperature/{deviceId}/latest
+          filters:
+            - UserFilterFactory
+            - UserDeviceAccessFilterFactory
+        - id: login
+          uri: http://localhost:8090
+          predicates:
+            - Path=/user/login
+        - id: userDevices
+          uri: http://localhost:8090
+          predicates:
+            - Path=/device/user
+          filters:
+            - UserFilterFactory
+            - UserUrlFilterFactory
