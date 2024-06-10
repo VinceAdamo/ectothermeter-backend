@@ -31,10 +31,11 @@ public class App
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {
                 try {
+                    String topic = "devices/+/readings";
                     logger.info("Connected to MQTT broker");
 
-                    logger.info( "Subscribing to topic readings..." );
-                    client.subscribe("readings", 1);
+                    logger.info( "Subscribing to topic "  + topic + "...");
+                    client.subscribe(topic, 1);
                 } catch (MqttException e) {
                     e.printStackTrace();
                 }
