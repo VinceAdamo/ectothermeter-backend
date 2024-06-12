@@ -34,7 +34,12 @@ public class MeasurementService {
 
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
-            return mapper.readValue(response.body(), Measurement.class);
+            String responseBody = response.body();
+            if (responseBody == null || responseBody.isEmpty()) {
+                return null;
+            }
+
+            return mapper.readValue(responseBody, Measurement.class);
         } catch (Exception e) {
             logger.error(e);
             throw new Exception("Unable to read latest temperature for device " + deviceId);

@@ -43,6 +43,13 @@ public abstract class ReadingsHandler {
 
             Measurement measurement = this.getLatest();
 
+            if (measurement == null) {
+                logger.info("No previous measurement found");
+                Measurement newMeasurement = this.create();
+                logger.debug("Measurement with id " + newMeasurement.id + " created");
+                return;
+            }
+
             logger.debug(measurement.toString());
 
             int compareValue = this.timestamp.compareTo(measurement.timestamp);
